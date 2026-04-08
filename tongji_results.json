@@ -1,0 +1,56 @@
+{
+  "total_matches": 4,
+  "total_files": 1,
+  "files": [
+    {
+      "file_path": "test_excel/tongji测试.xlsx",
+      "match_count": 4,
+      "sheets": [
+        {
+          "sheet_name": "Sheet1",
+          "match_count": 2,
+          "matches": [
+            {
+              "file": "test_excel/tongji测试.xlsx",
+              "sheet": "Sheet1",
+              "row": "张三",
+              "row_num": 2,
+              "col_num": 3,
+              "content": "tongji数据1"
+            },
+            {
+              "file": "test_excel/tongji测试.xlsx",
+              "sheet": "Sheet1",
+              "row": "王五",
+              "row_num": 4,
+              "col_num": 3,
+              "content": "tongji数据2"
+            }
+          ]
+        },
+        {
+          "sheet_name": "Sheet2",
+          "match_count": 2,
+          "matches": [
+            {
+              "file": "test_excel/tongji测试.xlsx",
+              "sheet": "Sheet2",
+              "row": "项目1",
+              "row_num": 2,
+              "col_num": 3,
+              "content": "包含tongji"
+            },
+            {
+              "file": "test_excel/tongji测试.xlsx",
+              "sheet": "Sheet2",
+              "row": "项目3",
+              "row_num": 4,
+              "col_num": 3,
+              "content": "tongji分析"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
