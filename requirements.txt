@@ -1,0 +1,4 @@
+openpyxl
+xlrd
+fuzzywuzzy
+python-Levenshtein

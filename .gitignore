@@ -1,0 +1,26 @@
+# Ignore Excel files
+*.xlsx
+*.xls
+*.xlsm
+*.xltx
+*.xlt
+*.xlm
+*.xla
+*.xlam
+*.xll
+*.xlw
+
+# Ignore test_excel directory
+test_excel/
+
+# Ignore build and distribution directories
+build/
+dist/
+
+# Ignore PyInstaller generated files
+*.spec
+
+# Ignore Python compiled files
+__pycache__/
+*.py[cod]
+*$py.class
