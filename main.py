@@ -10,26 +10,38 @@ import datetime
 def parse_time_interval(interval_str):
     """
     解析时间间隔字符串
-    :param interval_str: 时间间隔字符串，如 "1y"、"12m"
+    :param interval_str: 时间间隔字符串，如 "1y"、"12mo"、"30d"、"24h"、"60m"
     :return: 时间间隔的天数
     """
     if not interval_str:
         return None
     
-    unit = interval_str[-1].lower()
-    try:
-        value = int(interval_str[:-1])
-    except ValueError:
-        return None
-    
-    if unit == 'y':
-        return value * 365
-    elif unit == 'm':
-        return value * 30
-    elif unit == 'd':
-        return value
+    # 处理不同的时间单位
+    if interval_str.endswith('mo'):
+        # 月份
+        try:
+            value = int(interval_str[:-2])
+            return value * 30
+        except ValueError:
+            return None
     else:
-        return None
+        # 其他单位
+        unit = interval_str[-1].lower()
+        try:
+            value = int(interval_str[:-1])
+        except ValueError:
+            return None
+        
+        if unit == 'y':
+            return value * 365
+        elif unit == 'd':
+            return value
+        elif unit == 'h':
+            return value / 24
+        elif unit == 'm':
+            return value / (24 * 60)
+        else:
+            return None
 
 def is_file_within_time_range(file_path, days):
     """
@@ -45,7 +57,7 @@ def is_file_within_time_range(file_path, days):
         file_mtime = os.path.getmtime(file_path)
         file_time = datetime.datetime.fromtimestamp(file_mtime)
         current_time = datetime.datetime.now()
-        time_diff = (current_time - file_time).days
+        time_diff = (current_time - file_time).total_seconds() / (24 * 3600)  # 转换为天数
         return time_diff <= days
     except Exception:
         return False
@@ -235,13 +247,15 @@ def main():
         print(f"文件名筛选: {args.filename}")
     if args.max_files:
         print(f"最大文件数量: {args.max_files}")
+    if args.time:
+        print(f"时间间隔: {args.time}")
     if args.fuzzy:
         print(f"模糊搜索: 启用 (阈值: {args.threshold})")
     else:
         print(f"模糊搜索: 禁用 (精确匹配)")
     
     # 查找Excel文件
-    excel_files = find_excel_files(args.directory, args.filename, args.max_files)
+    excel_files = find_excel_files(args.directory, args.filename, args.max_files, args.time)
     print(f"找到 {len(excel_files)} 个Excel文件")
     
     # 搜索内容
@@ -291,3 +305,5 @@ def main():
 
 if __name__ == '__main__':
     main()
+    # python main.py tongji D:\all_projects --output test_results.json --time 1y
+    # python main.py D:\all_projects tongji --filename Profile --max-files 100 --output search_results.json --fuzzy --threshold 95 --time 1y
