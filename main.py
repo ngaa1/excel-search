@@ -1,14 +1,16 @@
 import os
 import argparse
+import json
 from fuzzywuzzy import fuzz
 from openpyxl import load_workbook
 import xlrd
 
-def find_excel_files(directory, filename_pattern=None):
+def find_excel_files(directory, filename_pattern=None, max_files=None):
     """
     查找目录及其子目录下的所有Excel文件
     :param directory: 要搜索的目录
     :param filename_pattern: 文件名关键词筛选
+    :param max_files: 最大文件数量限制
     :return: Excel文件路径列表
     """
     excel_files = []
@@ -20,6 +22,9 @@ def find_excel_files(directory, filename_pattern=None):
                         excel_files.append(os.path.join(root, file))
                 else:
                     excel_files.append(os.path.join(root, file))
+            # 检查是否达到文件数量限制
+            if max_files and len(excel_files) >= max_files:
+                return excel_files
     return excel_files
 
 def search_excel_content(file_path, keyword):
@@ -68,11 +73,23 @@ def search_excel_content(file_path, keyword):
         print(f"处理文件 {file_path} 时出错: {e}")
     return results
 
+def save_results(results, output_file):
+    """
+    保存搜索结果到本地文件
+    :param results: 搜索结果列表
+    :param output_file: 输出文件路径
+    """
+    with open(output_file, 'w', encoding='utf-8') as f:
+        json.dump(results, f, ensure_ascii=False, indent=2)
+    print(f"\n搜索结果已保存到: {output_file}")
+
 def main():
     parser = argparse.ArgumentParser(description='Excel文件内容搜索工具')
     parser.add_argument('directory', help='要搜索的目录')
     parser.add_argument('keyword', help='搜索关键词')
     parser.add_argument('--filename', help='文件名筛选关键词')
+    parser.add_argument('--max-files', type=int, help='最大搜索文件数量')
+    parser.add_argument('--output', help='保存搜索结果到文件')
     
     args = parser.parse_args()
     
@@ -80,9 +97,11 @@ def main():
     print(f"搜索关键词: {args.keyword}")
     if args.filename:
         print(f"文件名筛选: {args.filename}")
+    if args.max_files:
+        print(f"最大文件数量: {args.max_files}")
     
     # 查找Excel文件
-    excel_files = find_excel_files(args.directory, args.filename)
+    excel_files = find_excel_files(args.directory, args.filename, args.max_files)
     print(f"找到 {len(excel_files)} 个Excel文件")
     
     # 搜索内容
@@ -99,6 +118,10 @@ def main():
         print(f"   工作表: {result['sheet']}")
         print(f"   行标识: {result['row']}")
         print(f"   内容: {result['content']}")
+    
+    # 保存结果
+    if args.output:
+        save_results(all_results, args.output)
 
 if __name__ == '__main__':
     main()
