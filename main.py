@@ -306,4 +306,4 @@ def main():
 if __name__ == '__main__':
     main()
     # python main.py tongji D:\all_projects --output test_results.json --time 1y
-    # python main.py D:\all_projects tongji --filename Profile --max-files 100 --output search_results.json --fuzzy --threshold 95 --time 1y
+    # python main.py D:\all_projects tongji --filename Profile --max-files 1000 --output search_results.json --fuzzy --threshold 95 --time 1y
